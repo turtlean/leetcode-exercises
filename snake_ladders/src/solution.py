@@ -1,17 +1,11 @@
-class Game:
-    def __init__(self, n, board):
-        Game.validate(n, board)
+class Solution:
+    def snakesAndLadders(self, board) -> int:
+        n = len(board)
         self.n = n
         self.board = board
         self.min_until_row_column = [[n**2 for c in range(n)] for r in range(n)]
         self.even_rows_towards_right = (self.n - 1) % 2 == 0
-
-    @classmethod
-    def validate(cls, n, board):
-        if len(board) != n:
-            raise Exception(f"Invalid number of rows. {n} expected, got {len(board)}")
-        if any((len(r) != n) for r in board):
-            raise Exception(f"Invalid number of columns. {n} expected)")
+        return self.min_steps_from_row_column(self.n - 1, 0, 0)
 
     def min_steps_from_row_column(self, i, j, acum):
         if self.is_final_position(i, j):
