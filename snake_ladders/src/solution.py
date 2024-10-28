@@ -5,7 +5,10 @@ class Solution:
         self.board = board
         self.min_until_row_column = [[n**2 for c in range(n)] for r in range(n)]
         self.even_rows_towards_right = (self.n - 1) % 2 == 0
-        return self.min_steps_from_row_column(self.n - 1, 0, 0)
+        res = self.min_steps_from_row_column(self.n - 1, 0, 0)
+        if res >= n**2:
+            return -1
+        return res
 
     def min_steps_from_row_column(self, i, j, acum):
         if self.is_final_position(i, j):
@@ -14,7 +17,13 @@ class Solution:
             self.min_until_row_column[i][j] = acum
 
             tmp_min_steps = self.n**2
-            for roll in range(1, 7):
+            current = i * self.n + j
+
+            for roll in range(1, min(7, (self.n**2 - current))):
+                if i == 1 and j == 2:
+                    new_i, new_j = self.move_and_compute_next_position(i, j, roll)
+                    if new_i == 0 and new_j == 0:
+                        print("Pause!")
                 new_i, new_j = self.move_and_compute_next_position(i, j, roll)
                 current_tmp_min_step = self.min_steps_from_row_column(
                     new_i, new_j, acum + 1
@@ -41,7 +50,7 @@ class Solution:
             if new_i % 2 == 0:
                 if translated_j + column_offset > self.n - 1:
                     new_i = new_i - 1
-                    new_j = translated_j + column_offset - (self.n - 1) - 1
+                    new_j = self.n - 1 - (translated_j + column_offset - self.n)
                 else:
                     new_j = translated_j + column_offset
             else:
@@ -54,7 +63,7 @@ class Solution:
             if new_i % 2 == 1:
                 if translated_j + column_offset > self.n - 1:
                     new_i = new_i - 1
-                    new_j = translated_j + column_offset - (self.n - 1) - 1
+                    new_j = self.n - 1 - (translated_j + column_offset - self.n)
                 else:
                     new_j = translated_j + column_offset
             else:
@@ -85,6 +94,11 @@ class Solution:
         return i, j
 
     def is_final_position(self, i, j):
-        if i < 0 or i == 0 and j <= 0:
+        if i < 0:
             return True
+        if i == 0:
+            if self.even_rows_towards_right:
+                return j >= self.n - 1
+            else:
+                return j <= 0
         return False
