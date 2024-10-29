@@ -1,7 +1,11 @@
 from solution import Solution
 
 
-def test_board_3x7():
-    assert Solution().uniquePaths(3, 7) == 28
+def test_board_3x3():
+    obstacle_grid = [[0, 0, 0], [0, 1, 0], [0, 0, 0]]
+    assert Solution().uniquePathsWithObstacles(obstacle_grid) == 2
 
-test_board_3x7()
+
+def test_board_2x2():
+    obstacle_grid = [[0, 1], [0, 0]]
+    assert Solution().uniquePathsWithObstacles(obstacle_grid) == 1
